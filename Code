@@ -1,0 +1,29 @@
+import pandas as pd
+import numpy as np 
+import math
+locations= gpd.read_file("/Users/aynaz/Desktop/lla.csv")
+locations['lon_DMS']=''
+locations['lat_DMS']=''
+locations['x'] = locations['x'].astype('float')
+locations['y'] = locations['y'].astype('float')
+for index, row in locations.iterrows():
+    if row["x"]>0:
+        hemisphere="E"
+    elif row["x"]<0:
+        hemisphere="W"
+    degrees_lon=int(abs(math.modf(row["x"])[1]))
+    minutes_lon=int(abs(math.modf(math.modf(row["x"])[0]*60)[1]))
+    seconds_lon=abs(math.modf(math.modf(row["x"])[0]*60)[0]*60)
+    seconds_lon=round(seconds_lon,3)
+    locations.loc[index,"lon_DMS"]=str(degrees_lon)+ u"\u00b0 "+ str(minutes_lon)+"'"+ str(seconds_lon)+"\""
+    for index, row in locations.iterrows():
+    if row["y"]>0:
+        hemisphere="N"
+    elif row["y"]<0:
+        hemisphere="S"
+    degrees_lat=int(abs(math.modf(row["y"])[1]))
+    minutes_lat=int(abs(math.modf(math.modf(row["y"])[0]*60)[1]))
+    seconds_lat=abs(math.modf(math.modf(row["y"])[0]*60)[0]*60)
+    seconds_lat=round(seconds_lat,3)
+    locations.loc[index,"lat_DMS"]=str(degrees_lat)+ u"\u00b0 "+ str(minutes_lat)+"'"+ str(seconds_lat)+"\""
+    locations.to_csv ("/Users/aynaz/Desktop/Tree/DMS.csv")
