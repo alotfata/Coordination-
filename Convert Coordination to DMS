@@ -1,11 +1,16 @@
+#import libraries 
 import pandas as pd
 import numpy as np 
 import math
+#read csv file 
 locations= gpd.read_file("/Users/aynaz/Desktop/lla.csv")
+#add new columns to CSV file 
 locations['lon_DMS']=''
 locations['lat_DMS']=''
+# convert latitude and longitude to float 
 locations['x'] = locations['x'].astype('float')
 locations['y'] = locations['y'].astype('float')
+#convert longitude to Degree-Minute-Second 
 for index, row in locations.iterrows():
     if row["x"]>0:
         hemisphere="E"
@@ -16,6 +21,7 @@ for index, row in locations.iterrows():
     seconds_lon=abs(math.modf(math.modf(row["x"])[0]*60)[0]*60)
     seconds_lon=round(seconds_lon,3)
     locations.loc[index,"lon_DMS"]=str(degrees_lon)+ u"\u00b0 "+ str(minutes_lon)+"'"+ str(seconds_lon)+"\""
+ #convert latitude to Degree-Minute-Second 
     for index, row in locations.iterrows():
     if row["y"]>0:
         hemisphere="N"
@@ -26,4 +32,5 @@ for index, row in locations.iterrows():
     seconds_lat=abs(math.modf(math.modf(row["y"])[0]*60)[0]*60)
     seconds_lat=round(seconds_lat,3)
     locations.loc[index,"lat_DMS"]=str(degrees_lat)+ u"\u00b0 "+ str(minutes_lat)+"'"+ str(seconds_lat)+"\""
+ #Write it
     locations.to_csv ("/Users/aynaz/Desktop/Tree/DMS.csv")
